@@ -1,4 +1,8 @@
-googlr-genai
-pydantic
+streamlit
+langchain
+langchain-google-genai
+langchain-community
+langchain-chroma
+chromadb
+pypdf
 python-dotenv
-pydanticpyt

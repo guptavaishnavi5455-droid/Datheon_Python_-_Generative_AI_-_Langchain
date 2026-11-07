@@ -1,43 +1,83 @@
-# AI Resume Information Extractor
+Document Q&A Assistant using RAG and Vector Embeddings
 
-## Project Overview
-This project uses a Large Language Model (LLM) to extract structured information from PDF resumes and return the results in JSON format.
+Project Overview
 
-## Features
-- Extracts text from PDF resumes.
-- Uses Google Gemini to identify resume information.
-- Extracts name, email, phone, education, and skills.
-- Uses Pydantic to validate the extracted data.
-- Returns formatted JSON output.
-- Avoids inventing missing information.
+This project is an AI-powered Document Question Answering Assistant built using Retrieval-Augmented Generation (RAG).
 
-## Technologies Used
+It allows users to upload PDF documents and ask questions based on their content. The application retrieves relevant information from the uploaded document and generates accurate, context-based answers using Google's Gemini AI.
+
+Features
+
+- PDF document upload
+- Automatic document processing
+- Text extraction and chunking
+- Vector embeddings
+- Semantic search and retrieval
+- AI-powered question answering
+- Source page references
+- Readable Markdown-formatted answers
+- Streamlit web interface
+
+Technologies Used
+
 - Python
+- Streamlit
+- LangChain
 - Google Gemini API
-- Pydantic
-- PyPDF
-- python-dotenv
+- ChromaDB
+- Vector Embeddings
 
-## Project Workflow
-1. User provides a PDF resume path.
-2. PyPDF extracts the resume text.
-3. Gemini processes the text using a structured prompt.
-4. Pydantic validates the extracted information.
-5. The program displays the results as JSON.
+Project Structure
 
-## Setup Instructions
-1. Install Python.
-2. Clone or download this repository.
-3. Create a virtual environment.
-4. Install the required packages:
-   `pip install google-genai pydantic python-dotenv pypdf`
-5. Create a `.env` file in the project folder and add:
-   `GEMINI_API_KEY=your_api_key_here`
-6. Run the program:
-   `python main.py`
+datheon_task/
+│
+├── main.py
+├── requirements.txt
+├── .gitignore
+├── README.md
+└── .env (not uploaded)
 
-## Security
-Keep your Gemini API key private. Never upload your `.env` file.
+Installation and Setup
 
-## Author
-AI & Data Science Engineering Student
+1. Clone the repository:
+
+git clone YOUR_GITHUB_REPOSITORY_URL
+
+2. Navigate to the project folder:
+
+cd datheon_task
+
+3. Create and activate a virtual environment.
+
+4. Install dependencies:
+
+pip install -r requirements.txt
+
+5. Create a ".env" file and add your Gemini API key:
+
+GOOGLE_API_KEY=your_api_key_here
+
+6. Run the application:
+
+streamlit run main.py
+
+How to Use
+
+1. Open the application in your browser.
+2. Upload a PDF document.
+3. Click Process Document.
+4. Enter a question about the document.
+5. Click Get Answer.
+6. View the generated answer and source pages.
+
+AI Model
+
+Google Gemini 3.5 Flash
+
+Project Type
+
+AI / Machine Learning / Generative AI / Retrieval-Augmented Generation (RAG)
+
+Author
+
+Vaishnavi Gupta

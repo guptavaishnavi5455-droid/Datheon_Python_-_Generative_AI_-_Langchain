@@ -1,7 +1,10 @@
 .env
-.venv/
---oycache--/
+venv/
+__pycache__/
 *.pyc
-extracted_resume.json
-.vscode/
-Main_backup/
+chroma_db/
+*.log
+error_log.txt
+streamlit_log.txt
+resume.pdf
+*.pdf
