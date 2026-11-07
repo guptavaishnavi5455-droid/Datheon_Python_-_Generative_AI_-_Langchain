@@ -1,8 +1,4 @@
 streamlit
-langchain
-langchain-google-genai
-langchain-community
-langchain-chroma
-chromadb
-pypdf
 python-dotenv
+langchain-google-genai
+langchain-core

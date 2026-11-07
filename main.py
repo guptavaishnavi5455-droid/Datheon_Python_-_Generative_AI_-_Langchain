@@ -1,115 +1,97 @@
-import streamlit as st
 import os
-import tempfile
-
+import streamlit as st
 from dotenv import load_dotenv
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_chroma import Chroma
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
- 
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
+# Load API key
 load_dotenv()
-
-st.set_page_config(page_title="Document Q&A Assistant", page_icon="📚")
-
-st.title("📚 Document Q&A Assistant")
-st.write("Upload a PDF and ask questions about its content.")
-
 api_key = os.getenv("GOOGLE_API_KEY")
 
+# Page configuration
+st.set_page_config(
+    page_title="AI Chatbot",
+    page_icon="🤖",
+    layout="centered"
+)
+
+st.title("🤖 AI Chatbot")
+st.caption("Powered by Google Gemini")
+
 if not api_key:
-    st.error("Google API key not found. Please check your .env file.")
+    st.error("Google API key not found. Check your .env file.")
     st.stop()
 
-uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
+# Initialize Gemini
+llm = ChatGoogleGenerativeAI(
+    model="gemini-3.5-flash-lite",
+    google_api_key=api_key,
+    temperature=0.3,
+    max_output_tokens=256
+)
 
-if uploaded_file:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-        temp_file.write(uploaded_file.getvalue())
-        pdf_path = temp_file.name
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-    if st.button("Process Document"):
-        with st.spinner("Reading and processing PDF..."):
-            try:
-                loader = PyPDFLoader(pdf_path)
-                documents = loader.load()
+# Clear chat button
+if st.sidebar.button("Clear Chat"):
+    st.session_state.messages = []
+    st.rerun()
 
-                splitter = RecursiveCharacterTextSplitter(
-                    chunk_size=1000,
-                    chunk_overlap=200
-                )
+st.sidebar.title("Chat Settings")
+st.sidebar.write("Model: Gemini 2.5 Flash")
+st.sidebar.write("Chat history is stored during this session.")
 
-                chunks = splitter.split_documents(documents)
+# Display previous messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-                embeddings = GoogleGenerativeAIEmbeddings(
-                    model="models/gemini-embedding-001",
-                    google_api_key=api_key
-                )
+# Chat input
+prompt = st.chat_input("Ask me anything...")
 
-                vectorstore = Chroma.from_documents(
-                    documents=chunks,
-                    embedding=embeddings,
-                    collection_name="document_qa"
-                )
+if prompt:
+    # Display user message
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt
+    })
 
-                st.session_state.vectorstore = vectorstore
-                st.success(f"Document processed! {len(chunks)} chunks created.")
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-            except Exception as e:
-                st.error(f"Error: {e}")
+    # Prepare conversation for Gemini
+    history = [
+        SystemMessage(content="You are a helpful AI assistant.")
+    ]
 
-if "vectorstore" in st.session_state:
-    question = st.text_input("Ask a question about your PDF:")
+    for message in st.session_state.messages[:-1]:
+        if message["role"] == "user":
+            history.append(HumanMessage(content=message["content"]))
+        else:
+            history.append(AIMessage(content=message["content"]))
 
-    if st.button("Get Answer"):
-        if question:
-            with st.spinner("Finding your answer..."):
-                try:
-                    llm = ChatGoogleGenerativeAI(
-                        model="gemini-3.5-flash",
-                        google_api_key=api_key,
-                        temperature=0
-                    )
+    history.append(HumanMessage(content=prompt))
 
-                    docs = st.session_state.vectorstore.similarity_search(
-                        question, k=3
-                    )
+    # Generate streaming response
+    with st.chat_message("assistant"):
+        try:
+            def generate_response():
+                for chunk in llm.stream(history):
+                    if isinstance(chunk.content, str):
+                        yield chunk.content
+                    elif isinstance(chunk.content, list):
+                        for item in chunk.content:
+                            if isinstance(item, dict) and item.get("type") == "text":
+                                yield item.get("text", "")
 
-                    context = "\n\n".join(
-                        doc.page_content for doc in docs
-                    )
+            response = st.write_stream(generate_response())
 
-                    prompt = f"""
-                    Answer the question using only the context below.
-                    If the answer is not present, say you cannot find it
-                    in the uploaded document.
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": response
+            })
 
-                    Context:
-                    {context}
-
-                    Question:
-                    {question}
-                    """
-
-                    response = llm.invoke(prompt)
-                    st.subheader("Answer")
-                    if isinstance(response.content, str):
-                       answer_text = response.content
-                    else:
-                     answer_text = "\n\n".join(
-                      block.get("text", "")
-                      for block in response.content
-                      if isinstance(block, dict) and block.get("type") ==
-                    "text"
-                      )
-
-                    st.markdown(answer_text)
-
-                    st.subheader("Source Pages")
-                    for doc in docs:
-                        st.write(f"Page {doc.metadata.get('page', 0) + 1}")
-
-                except Exception as e:
-                    st.error(f"Error: {e}")
+        except Exception as e:
+            st.error(f"Error: {e}")
