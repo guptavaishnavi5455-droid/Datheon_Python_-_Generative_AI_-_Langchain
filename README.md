@@ -1,83 +1,60 @@
-Document Q&A Assistant using RAG and Vector Embeddings
+Datheon Internship Projects
 
-Project Overview
+Python, Generative AI & LangChain
 
-This project is an AI-powered Document Question Answering Assistant built using Retrieval-Augmented Generation (RAG).
+This repository contains three projects developed as part of the Datheon internship program.
 
-It allows users to upload PDF documents and ask questions based on their content. The application retrieves relevant information from the uploaded document and generates accurate, context-based answers using Google's Gemini AI.
+Projects
 
-Features
+Task 1: AI Resume Extractor
 
-- PDF document upload
-- Automatic document processing
-- Text extraction and chunking
-- Vector embeddings
-- Semantic search and retrieval
-- AI-powered question answering
-- Source page references
-- Readable Markdown-formatted answers
-- Streamlit web interface
+- Extracts structured information from resumes.
+- Uses Generative AI to process resume content.
+- Converts extracted information into structured JSON output.
+
+Folder: "TASK_1_AI_Resume_Extractor"
+
+Task 2: Document Q&A Assistant
+
+- AI-powered Document Question Answering system.
+- Uses Retrieval-Augmented Generation (RAG).
+- Uses LangChain, Gemini, vector embeddings and ChromaDB.
+- Allows users to ask questions about uploaded documents.
+
+Folder: "TASK_2_Document_QA_Assistant"
+
+Live Demo: https://datheon-task2-document-app-assistant-4tivgecqdnocmrqtfkqget.streamlit.app/
+
+Task 3: AI Chatbot
+
+- Python-based AI chatbot.
+- Designed to interact with users through natural language.
+- Generates AI-powered responses.
+
+Folder: "TASK_3_AI_Chatbot"
 
 Technologies Used
 
 - Python
-- Streamlit
+- Generative AI
+- Google Gemini
 - LangChain
-- Google Gemini API
+- Retrieval-Augmented Generation (RAG)
 - ChromaDB
-- Vector Embeddings
+- Streamlit
 
-Project Structure
+Repository Structure
 
-datheon_task/
+Datheon_Python_Generative_AI_LangChain/
 │
-├── main.py
-├── requirements.txt
+├── TASK_1_AI_Resume_Extractor/
+├── TASK_2_Document_QA_Assistant/
+├── TASK_3_AI_Chatbot/
 ├── .gitignore
-├── README.md
-└── .env (not uploaded)
-
-Installation and Setup
-
-1. Clone the repository:
-
-git clone YOUR_GITHUB_REPOSITORY_URL
-
-2. Navigate to the project folder:
-
-cd datheon_task
-
-3. Create and activate a virtual environment.
-
-4. Install dependencies:
-
-pip install -r requirements.txt
-
-5. Create a ".env" file and add your Gemini API key:
-
-GOOGLE_API_KEY=your_api_key_here
-
-6. Run the application:
-
-streamlit run main.py
-
-How to Use
-
-1. Open the application in your browser.
-2. Upload a PDF document.
-3. Click Process Document.
-4. Enter a question about the document.
-5. Click Get Answer.
-6. View the generated answer and source pages.
-
-AI Model
-
-Google Gemini 3.5 Flash
-
-Project Type
-
-AI / Machine Learning / Generative AI / Retrieval-Augmented Generation (RAG)
+└── README.md
 
 Author
 
 Vaishnavi Gupta
+
+Developed as part of the Datheon Internship Program.
