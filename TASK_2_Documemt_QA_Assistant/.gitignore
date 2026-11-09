@@ -1,0 +1,10 @@
+.env
+venv/
+__pycache__/
+*.pyc
+chroma_db/
+*.log
+error_log.txt
+streamlit_log.txt
+resume.pdf
+*.pdf
