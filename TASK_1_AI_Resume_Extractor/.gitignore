@@ -1,0 +1,7 @@
+.env
+.venv/
+--oycache--/
+*.pyc
+extracted_resume.json
+.vscode/
+Main_backup/
